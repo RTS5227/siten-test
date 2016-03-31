@@ -51,7 +51,7 @@
                     </div>
                     <div class="form-group col-sm-5">
                         <label for="mail">Mail address</label>
-                        <input id="mail" type="text" class="form-control" ng-model="search.mail_address"/>
+                        <input id="mail" type="email" class="form-control" ng-model="search.email"/>
                     </div>
                     <div class="form-group col-sm-offset-2 col-sm-2">
                         <label for="">&nbsp;</label>
@@ -75,12 +75,15 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="i in users">
-                    <td><input type="text" class="form-control" ng-model="i.id"></td>
+                    <td>
+                        <input type="hidden" ng-model="i.id">
+                        <input type="text" class="form-control" ng-model="i.uid" required>
+                    </td>
                     <td>
                         <select ng-options="item.code as item.name for item in commons.offices track by item.code"
                                 ng-model="i.office" class="form-control"></select>
                     </td>
-                    <td><input type="text" class="form-control" ng-model="i.email"/></td>
+                    <td><input type="email" class="form-control" ng-model="i.email"/></td>
                     <td><input type="text" class="form-control" ng-model="i.created_by"/></td>
                     <td><input type="text" class="form-control" ng-model="i.last_update_at"></td>
                     <td>
@@ -91,7 +94,7 @@
                         <select ng-options="item.code as item.name for item in commons.roles track by item.code"
                                 ng-model="search.role" class="form-control"></select>
                     </td>
-                    <td><input type="password" class="form-control" ng-model="i.password"></td>
+                    <td><input type="password" class="form-control" ng-model="i.password" ng-pattern="/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i"></td>
                 </tr>
                 </tbody>
             </table>

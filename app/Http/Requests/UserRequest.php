@@ -28,17 +28,16 @@ class UserRequest extends Request
      */
     public function rules()
     {
+        $user_id = request()->get('id');
+        //edit
         if (request()->isMethod('put')) {
-            $emailUnique = (request()->get('email') == \Auth::user()->email)
-                ? '' : '|unique:users';
-            $usernameUnique = (request()->get('username') == \Auth::user()->username)
-                ? '' : '|unique:users';
             return [
                 'id' => 'required',
-                'username' => 'required' . $usernameUnique,
-                'email' => 'required|email' . $emailUnique
+                'username' => 'required|unique:users,username,' . $user_id,
+                'email' => 'required|email|unique:users,email,' . $user_id
             ];
         }
+        //create new
         return [
             'username' => 'required|unique:users',
             'password' => ['required', 'min:6', 'regex:/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i'],

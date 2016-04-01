@@ -9,7 +9,7 @@ app.constant('USER_ROLES', {
 
 
 app.factory('User', function ($resource) {
-    return $resource('home/user/:id', {id: '@id'}, {
+    return $resource('api/user/:id', {id: '@id'}, {
         update: {
             method: 'PUT'
         }
@@ -72,7 +72,7 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
     $scope.isAuthorized = AuthService.isAuthorized;
     $scope.isAuthenticated = isAuthenticated;
     if ($scope.isAuthenticated) {
-        $http.get('home/common').success(function (data) {
+        $http.get('api/common').success(function (data) {
             $scope.commons = data;
         });
     }
@@ -95,6 +95,12 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
     };
     $scope.doSearch = function(data){
         reload();
+        for(var i in data){
+            if(!data.hasOwnProperty(i))continue;
+            if(data[i] == null){
+                delete data[i];
+            }
+        }
         $scope.search = data;
     };
 

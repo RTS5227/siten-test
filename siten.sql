@@ -45,6 +45,19 @@ INSERT INTO `commons` (`id`, `name`, `value`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `actor` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `action` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+--
 -- Table structure for table `migrations`
 --
 

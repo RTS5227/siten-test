@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Common;
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\UserRequest;
+use App\Log;
 use App\User;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
@@ -78,8 +79,10 @@ class ApiController extends BaseController
         }
         if (\Auth::user()->role === 'ADMIN') {
             $user = User::create($data);
+            Log::create(['actor'=>\Auth::user()->username, 'action' => 'create new user successful']);
             return response()->json($user->toArray());
         }
+        Log::create(['actor'=>\Auth::user()->username, 'action' => 'create new user failed']);
         return response()->json(['role' => ['Access Denied']], 403);
     }
 
@@ -101,8 +104,10 @@ class ApiController extends BaseController
                 unset($data['password']);
             }
             $user->update($data);
+            Log::create(['actor'=>\Auth::user()->username, 'action' => "edit user {$user->username} successful"]);
             return response()->json($user->toArray());
         } else {
+            Log::create(['actor'=>\Auth::user()->username, 'action' => "edit user {$user->username} failed"]);
         }
         return response()->json(['role' => ['Access Denied']], 403);
     }

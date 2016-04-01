@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Log;
 
 class LoginController extends Controller
 {
@@ -20,8 +21,10 @@ class LoginController extends Controller
     public function Login(LoginRequest $request)
     {
         if (\Auth::attempt($request->all())) {
+            Log::create(['actor'=>\Auth::user()->username, 'action' => 'login successful']);
             return response()->json(\Auth::user());
         } else {
+            Log::create(['actor'=>'', 'action' => 'login failed']);
             return response()->json(['auth' => ['Invalid username/password']], 401);
         }
     }
@@ -45,6 +48,7 @@ class LoginController extends Controller
      */
     public Function Logout()
     {
+        Log::create(['actor'=>\Auth::user()->username, 'action' => 'logout successful']);
         \Auth::logout();
         return 'logged out';
     }

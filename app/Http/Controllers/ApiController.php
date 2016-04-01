@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Common;
 use App\Http\Requests\Request;
+use App\Http\Requests\SearchRequest;
 use App\Http\Requests\UserRequest;
 use App\User;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\DB;
 
 class ApiController extends BaseController
 {
@@ -18,42 +20,45 @@ class ApiController extends BaseController
     /**
      * GET /api/search
      *
-     * @param UserRequest $request
+     * @param SearchRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSearch(UserRequest $request){
+    public function getSearch(SearchRequest $request)
+    {
         $q = User::query();
-        if($request->has('username')){
+        if ($request->has('username')) {
             $q->where('username', '=', $request->get('username'));
         }
-        if($request->has('email')){
+        if ($request->has('email')) {
             $q->where('email', 'LIKE', "%{$request->get('email')}%");
         }
-        if($request->has('type')){
+        if ($request->has('type')) {
             $q->where('type', '=', $request->get('type'));
         }
-        if($request->has('office')){
+        if ($request->has('office')) {
             $q->where('office', '=', $request->get('office'));
         }
-        if($request->has('role')){
+        if ($request->has('role')) {
             $q->where('role', '=', $request->get('role'));
         }
-        $result = $q->orderBy('id')->paginate(10);
-        return response()->json($result);
+        $result = $q->paginate(10);
+        $lastId = DB::table('users')->select(DB::raw('max(id) as max'))->get();
+        $lastId = +$lastId[0]->max;
+        return response()->json(['result' => $result, 'last_id'=> $lastId]);
     }
 
     /**
      * Responds to requests to GET /api/User/[:id]
      *
-     * @param $id
+     * @param SearchRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUser($id = 0)
+    public function getUser(SearchRequest $request)
     {
-        if ($id > 0 && $user = User::find($id)) {
+        if ($request->has('id') && $user = User::find(+$request->get('id'))) {
             return response()->json($user->toArray());
         }
-        return response()->json(User::all());
+        return $this->getSearch($request);
     }
 
 
@@ -98,7 +103,7 @@ class ApiController extends BaseController
             }
             $user->update($data);
             return response()->json($user->toArray());
-        }else{
+        } else {
         }
         return response()->json(false);
     }

@@ -8,18 +8,20 @@
 
 namespace App\Http\Controllers;
 
-class LoginController
+use App\Http\Requests\LoginRequest;
+
+class LoginController extends Controller
 {
-    public function Login(){
-        if(Auth::attempt(Input::only('username','password'))){
-            return Auth::user();
+    public function Login(LoginRequest $request){
+        if(\Auth::attempt($request->all())){
+            return \Auth::user();
         }else{
-            return 'invalid username/password';
+            return 'Invalid username/password';
         }
     }
 
     public Function Logout(){
-        Auth::logout();
+        \Auth::logout();
         return 'logged out';
     }
 }

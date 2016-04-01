@@ -23,7 +23,7 @@ class HomeController extends BaseController
      */
     public function getUser($id = 0)
     {
-        if($id > 0 && $user = User::find($id)){
+        if ($id > 0 && $user = User::find($id)) {
             return response()->json($user->toArray());
         }
         return response()->json(User::all());
@@ -38,7 +38,13 @@ class HomeController extends BaseController
      */
     public function postUser(UserRequest $request)
     {
-        $user = User::create($request->all());
+        $data = $request->all();
+        if ($request->password) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
+        $user = User::create($data);
         if (\Auth::user()->role == 'ADMIN') {
             return response()->json($user->toArray());
         }
@@ -56,7 +62,13 @@ class HomeController extends BaseController
     {
         $user = User::findOrFail($request->id);
         if (\Auth::user()->role == 'ADMIN' || \Auth::user()->username == $user->username) {
-            $user->update($request->all());
+            $data = $request->all();
+            if ($request->password) {
+                $data['password'] = bcrypt($data['password']);
+            } else {
+                unset($data['password']);
+            }
+            $user->update($data);
             return response()->json($user->toArray());
         }
         return response()->json(false);

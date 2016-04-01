@@ -65,8 +65,8 @@
                     ng-model="i.office" class="form-control"></select>
         </td>
         <td><input type="email" class="form-control" ng-model="i.email"/></td>
-        <td>{{created_by}}</td>
-        <td>{{update_at}}</td>
+        <td>{{i.created_by}}</td>
+        <td>{{i.updated_at | date:'yyyy-MM-dd HH:mm'}}</td>
         <td>
             <select ng-options="item.code as item.name for item in commons.types"
                     ng-model="i.type" class="form-control"></select>

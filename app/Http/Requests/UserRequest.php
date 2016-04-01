@@ -32,7 +32,6 @@ class UserRequest extends Request
             return [
                 'id' => 'required',
                 'username' => 'required',
-                'password' => 'required|min:6',
                 'email' => 'required|email'
             ];
         }

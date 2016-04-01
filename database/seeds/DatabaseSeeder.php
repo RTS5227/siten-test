@@ -59,8 +59,9 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->delete();
         $user = [
             'username' => '0001',
+            'created_by' => '0001',
             'email' => 'god@admin.com',
-            'password' => '123456',
+            'password' => bcrypt('123456'),
             'role' => 'ADMIN'
         ];
         DB::table('users')->insert($user);

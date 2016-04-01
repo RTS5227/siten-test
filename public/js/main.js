@@ -1,30 +1,12 @@
 var app = angular.module('siten', ['ngResource']);
 
-app.constant('AUTH_EVENTS', {
-    loginSuccess: 'auth-login-success',
-    loginFailed: 'auth-login-failed',
-    logoutSuccess: 'auth-logout-success',
-    sessionTimeout: 'auth-session-timeout',
-    notAuthenticated: 'auth-not-authenticated',
-    notAuthorized: 'auth-not-authorized'
-}).constant('USER_ROLES', {
+app.constant('USER_ROLES', {
     all: '*',
     admin: 'ADMIN',
-    editor: 'GENERAL'
+    general: 'GENERAL',
+    guest: 'GUEST'
 });
 
-app.service('Session', function () {
-    this.create = function (sessionId, userId, userRole) {
-        this.id = sessionId;
-        this.userId = userId;
-        this.userRole = userRole;
-    };
-    this.destroy = function () {
-        this.id = null;
-        this.userId = null;
-        this.userRole = null;
-    };
-});
 
 app.factory('User', function ($resource) {
     return $resource('home/user/:id', {id: '@id'}, {
@@ -34,16 +16,35 @@ app.factory('User', function ($resource) {
     });
 });
 
+app.service('Session', function () {
+    this.create = function (sessionId, userId, userRole) {
+        this.userId = userId;
+        this.userRole = userRole;
+    };
+    this.destroy = function () {
+        this.userId = null;
+        this.userRole = null;
+    };
+});
+
 app.factory('AuthService', function ($http, Session) {
     var authService = {};
 
     authService.login = function (credentials) {
         return $http
-            .post('/home/login', credentials)
+            .post('login', credentials)
             .then(function (res) {
-                Session.create(res.data.id, res.data.user.id,
-                    res.data.user.role);
-                return res.data.user;
+                Session.create(res.data.id,
+                    res.data.role);
+                return res.data;
+            });
+    };
+
+    authService.logout = function () {
+        return $http
+            .post('logout')
+            .then(function () {
+                Session.destroy();
             });
     };
 
@@ -62,7 +63,7 @@ app.factory('AuthService', function ($http, Session) {
     return authService;
 });
 
-app.controller('userCtrl', function ($scope, $rootScope, $http, User, AuthService, AUTH_EVENTS, USER_ROLES) {
+app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLES) {
     $scope.credentials = {
         username: '',
         password: ''
@@ -70,22 +71,25 @@ app.controller('userCtrl', function ($scope, $rootScope, $http, User, AuthServic
     $scope.currentUser = null;
     $scope.userRoles = USER_ROLES;
     $scope.isAuthorized = AuthService.isAuthorized;
-    $scope.isAuthenticated = AuthService.isAuthenticated();
+    $scope.isAuthenticated = isAuthenticated;
+    if ($scope.isAuthenticated) {
+        init();
+    }
 
     $scope.setCurrentUser = function (user) {
         $scope.currentUser = user;
     };
     $scope.login = function (credentials) {
         AuthService.login(credentials).then(function (user) {
-            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+            $scope.isAuthenticated = AuthService.isAuthenticated();
             $scope.setCurrentUser(user);
             init();
-        }, function () {
-            $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+        }, function (res) {
+            error(res.data);
         });
     };
 
-    function init(){
+    function init() {
         $http.get('home/common').success(function (data) {
             $scope.commons = data;
         });
@@ -97,15 +101,15 @@ app.controller('userCtrl', function ($scope, $rootScope, $http, User, AuthServic
     $scope.save = function (user) {
         $scope.currentUser = new User(user);
         if (angular.isDefined(user.id)) {
-            $scope.currentUser.$update(function(res){
+            $scope.currentUser.$update(function (res) {
                 toastr.info('Lưu thành công!');
-            }, function(res){
+            }, function (res) {
                 error(res.data);
             });
         } else {
-            $scope.currentUser.$save(function(res){
+            $scope.currentUser.$save(function (res) {
                 toastr.info('Đăng ký thành công!');
-            }, function(res){
+            }, function (res) {
                 error(res.data);
             });
         }
@@ -117,7 +121,7 @@ app.controller('userCtrl', function ($scope, $rootScope, $http, User, AuthServic
         $scope.users.push(newUser);
     };
 
-    function error(data){
+    function error(data) {
         for (var key in data) {
             // skip loop if the property is from prototype
             if (!data.hasOwnProperty(key)) continue;

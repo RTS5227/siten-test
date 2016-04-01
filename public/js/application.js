@@ -8,10 +8,17 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
     };
     $scope.currentUser = null;
     $scope.userRoles = USER_ROLES;
+    /**
+     * check auth
+     */
     AuthService.check().then(function(res){
         $scope.reload(res.data);
     });
 
+    /**
+     * reload auth
+     * @param user
+     */
     $scope.reload = function(user){
         $scope.isAuthorized = AuthService.isAuthorized;
         $scope.isAuthenticated = AuthService.isAuthenticated;
@@ -23,9 +30,18 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
         }
     };
 
+    /**
+     * set current user
+     * @param user
+     */
     $scope.setCurrentUser = function (user) {
         $scope.currentUser = user;
     };
+
+    /**
+     * login and reload auth
+     * @param credentials
+     */
     $scope.login = function (credentials) {
         AuthService.login(credentials).success(function (user) {
             $scope.reload(user);
@@ -33,11 +49,20 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
             error(res);
         });
     };
+
+    /**
+     * logout and reload view
+     */
     $scope.logout = function () {
         AuthService.logout().then(function () {
             $scope.isAuthenticated = AuthService.isAuthenticated;
         });
     };
+
+    /**
+     * search user
+     * @param data
+     */
     $scope.doSearch = function (data) {
         data = data || {};
         User.query(data, function (res) {
@@ -46,6 +71,13 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
             $scope.addEmptyUser();
         });
     };
+
+    /**
+     * create/update user
+     *
+     * @param user
+     * @param index
+     */
     $scope.save = function (user, index) {
         $scope.currentUser = new User(user);
         if (angular.isDefined(user.id)) {
@@ -66,6 +98,9 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
         }
     };
 
+    /**
+     * insert empty user to last row
+     */
     $scope.addEmptyUser = function () {
         if (!AuthService.isAuthorized(USER_ROLES.admin))return;
         last_insert_id++;
@@ -74,6 +109,11 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
         $scope.users.push(newUser);
     };
 
+    /**
+     * display error alert
+     * @param data
+     * @returns {*}
+     */
     function error(data) {
         for (var key in data) {
             // skip loop if the property is from prototype
@@ -116,6 +156,9 @@ app.service('Session', function () {
     };
 });
 
+/**
+ * AuthService:check auth, login and logout session
+ */
 app.factory('AuthService', function ($http, Session) {
     var authService = {};
 
@@ -156,7 +199,12 @@ app.factory('AuthService', function ($http, Session) {
     return authService;
 });
 
-
+/**
+ * insert n of 0 to left
+ * @param input
+ * @param n
+ * @returns {string}
+ */
 function leftPadding(input, n) {
     var input = (typeof input === 'string') ? input : '';
     if (input.length >= n)

@@ -63,6 +63,7 @@ class ApiController extends BaseController
 
 
     /**
+     * CREATE NEW USER
      * Responds to requests to POST /api/User
      *
      * @param UserRequest $request
@@ -88,6 +89,7 @@ class ApiController extends BaseController
 
 
     /**
+     * UPDATE USER
      * Responds to requests to PUT /api/User/:id
      *
      * @param UserRequest $request

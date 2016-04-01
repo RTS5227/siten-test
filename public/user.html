@@ -87,7 +87,7 @@
             </select>
         </td>
         <td><input type="password" placeholder="******" class="form-control" ng-model="i.password"></td>
-        <td><button ng-show="isAuthorized(userRoles.admin) || i.username==currentUser.username" ng-disabled="userFrm.$invalid" class="btn btn-success" type="button" ng-click="save(i, $index)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
+        <td><button ng-show="isAuthorized(userRoles.admin) || i.id==currentUser.id" ng-disabled="userFrm.$invalid" class="btn btn-success" type="button" ng-click="save(i, $index)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
     </tr>
     </tbody>
 </table>

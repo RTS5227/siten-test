@@ -11,5 +11,6 @@ class User extends Authenticatable
     protected $hidden = ['password'];
     protected $attributes = [
         'role' => 'USER',
+        'type' => 'USE'
     ];
 }

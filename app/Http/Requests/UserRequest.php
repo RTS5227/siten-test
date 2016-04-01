@@ -29,10 +29,14 @@ class UserRequest extends Request
     public function rules()
     {
         if (request()->isMethod('put')) {
+            $emailUnique = (request()->get('email') == \Auth::user()->email)
+                ? '' : '|unique:users';
+            $usernameUnique = (request()->get('username') == \Auth::user()->username)
+                ? '' : '|unique:users';
             return [
                 'id' => 'required',
-                'username' => 'required',
-                'email' => 'required|email'
+                'username' => 'required' . $usernameUnique,
+                'email' => 'required|email' . $emailUnique
             ];
         }
         return [

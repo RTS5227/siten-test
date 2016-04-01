@@ -1,5 +1,31 @@
 var app = angular.module('siten', ['ngResource']);
 
+app.constant('AUTH_EVENTS', {
+    loginSuccess: 'auth-login-success',
+    loginFailed: 'auth-login-failed',
+    logoutSuccess: 'auth-logout-success',
+    sessionTimeout: 'auth-session-timeout',
+    notAuthenticated: 'auth-not-authenticated',
+    notAuthorized: 'auth-not-authorized'
+}).constant('USER_ROLES', {
+    all: '*',
+    admin: 'ADMIN',
+    editor: 'GENERAL'
+});
+
+app.service('Session', function () {
+    this.create = function (sessionId, userId, userRole) {
+        this.id = sessionId;
+        this.userId = userId;
+        this.userRole = userRole;
+    };
+    this.destroy = function () {
+        this.id = null;
+        this.userId = null;
+        this.userRole = null;
+    };
+});
+
 app.factory('User', function ($resource) {
     return $resource('home/user/:id', {id: '@id'}, {
         update: {
@@ -8,14 +34,65 @@ app.factory('User', function ($resource) {
     });
 });
 
-app.controller('userCtrl', function ($scope, $http, User) {
-    $http.get('home/common').success(function (data) {
-        $scope.commons = data;
-    });
+app.factory('AuthService', function ($http, Session) {
+    var authService = {};
 
-    $scope.users = User.query(function () {
-        $scope.addEmptyUser();
-    });
+    authService.login = function (credentials) {
+        return $http
+            .post('/home/login', credentials)
+            .then(function (res) {
+                Session.create(res.data.id, res.data.user.id,
+                    res.data.user.role);
+                return res.data.user;
+            });
+    };
+
+    authService.isAuthenticated = function () {
+        return !!Session.userId;
+    };
+
+    authService.isAuthorized = function (authorizedRoles) {
+        if (!angular.isArray(authorizedRoles)) {
+            authorizedRoles = [authorizedRoles];
+        }
+        return (authService.isAuthenticated() &&
+        authorizedRoles.indexOf(Session.userRole) !== -1);
+    };
+
+    return authService;
+});
+
+app.controller('userCtrl', function ($scope, $rootScope, $http, User, AuthService, AUTH_EVENTS, USER_ROLES) {
+    $scope.credentials = {
+        username: '',
+        password: ''
+    };
+    $scope.currentUser = null;
+    $scope.userRoles = USER_ROLES;
+    $scope.isAuthorized = AuthService.isAuthorized;
+    $scope.isAuthenticated = AuthService.isAuthenticated();
+
+    $scope.setCurrentUser = function (user) {
+        $scope.currentUser = user;
+    };
+    $scope.login = function (credentials) {
+        AuthService.login(credentials).then(function (user) {
+            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+            $scope.setCurrentUser(user);
+            init();
+        }, function () {
+            $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+        });
+    };
+
+    function init(){
+        $http.get('home/common').success(function (data) {
+            $scope.commons = data;
+        });
+        $scope.users = User.query(function () {
+            $scope.addEmptyUser();
+        });
+    }
 
     $scope.save = function (user) {
         $scope.currentUser = new User(user);
@@ -36,7 +113,7 @@ app.controller('userCtrl', function ($scope, $http, User) {
 
     $scope.addEmptyUser = function () {
         var newUser = new User();
-        newUser.uid = leftPadding(String(1 + getMaxUid()), 4);
+        newUser.username = leftPadding(String(1 + getMaxUid()), 4);
         $scope.users.push(newUser);
     };
 
@@ -54,7 +131,7 @@ app.controller('userCtrl', function ($scope, $http, User) {
     function getMaxUid() {
         var max = 0;
         for (var i in $scope.users) {
-            var uid = parseInt($scope.users[i].uid) || 0;
+            var uid = parseInt($scope.users[i].username) || 0;
             if (max < uid) {
                 max = uid;
             }

@@ -8,10 +8,18 @@
 
 namespace App\Http\Controllers;
 
-
 class LoginController
 {
-    public function index(){
-        return view();
+    public function Login(){
+        if(Auth::attempt(Input::only('username','password'))){
+            return Auth::user();
+        }else{
+            return 'invalid username/password';
+        }
+    }
+
+    public Function Logout(){
+        Auth::logout();
+        return 'logged out';
     }
 }

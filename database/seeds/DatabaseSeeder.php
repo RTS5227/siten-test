@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->delete();
         $user = [
-            'uid' => '0001',
+            'username' => '0001',
             'email' => 'god@admin.com',
             'password' => '123456',
             'role' => 'ADMIN'

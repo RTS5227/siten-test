@@ -12,7 +12,7 @@ class HomeController extends BaseController
 {
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -55,7 +55,7 @@ class HomeController extends BaseController
     public function putUser(UserRequest $request)
     {
         $user = User::findOrFail($request->id);
-        if (true) {
+        if (\Auth::user()->role == 'ADMIN' || \Auth::user()->username == $user->username) {
             $user->update($request->all());
             return response()->json($user->toArray());
         }

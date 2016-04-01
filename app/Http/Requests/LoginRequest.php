@@ -9,7 +9,7 @@
 namespace App\Http\Requests;
 
 
-class UserRequest extends Request
+class LoginRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,18 +28,9 @@ class UserRequest extends Request
      */
     public function rules()
     {
-        if (request()->isMethod('put')) {
-            return [
-                'id' => 'required',
-                'username' => 'required',
-                'password' => 'required|min:6',
-                'email' => 'required|email'
-            ];
-        }
         return [
-            'username' => 'required|unique:users',
+            'username' => 'required',
             'password' => 'required|min:6',
-            'email' => 'required|email|unique:users'
         ];
     }
 }

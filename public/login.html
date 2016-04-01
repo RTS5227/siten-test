@@ -2,17 +2,17 @@
     <div class="col-sm-offset-4 col-sm-4">
         <h4>Login</h4>
         <!--login form-->
-        <form action="">
+        <form novalidate ng-submit="login(credentials)" name="loginFrm">
             <div class="form-group">
                 <label for="uid" class="control-label">ID:</label>
-                <input type="text" id="uid" class="form-control" ng-model="credentials.username">
+                <input type="text" id="uid" class="form-control" ng-model="credentials.username" required>
             </div>
             <div class="form-group">
                 <label for="password" class="control-label">Password:</label>
-                <input type="password" id="password" class="form-control" ng-model="credentials.password">
+                <input type="password" id="password" class="form-control" ng-model="credentials.password" ng-minlength="6" required>
             </div>
             <div class="text-center">
-                <button class="btn btn-primary" ng-click="login(credentials)" type="button">Login</button>
+                <button class="btn btn-primary" type="submit" ng-disabled="loginFrm.$invalid">Login</button>
             </div>
         </form>
     </div>

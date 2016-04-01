@@ -5,7 +5,7 @@
 </div>
 <br>
 <!-- search box -->
-<form action="" class="search_frm">
+<form novalidate class="search_frm">
     <div class="row">
         <div class="form-group col-sm-3">
             <label for="id">ID</label>
@@ -40,7 +40,7 @@
         </div>
         <div class="form-group col-sm-offset-2 col-sm-2">
             <label>&nbsp;</label>
-            <button type="button" class="form-control btn btn-warning" ng-click="doSearch(s)" tabindex="6">Search</button>
+            <button type="submit" class="form-control btn btn-warning" ng-click="doSearch(s)" tabindex="6">Search</button>
         </div>
     </div>
 </form>
@@ -60,10 +60,10 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="i in users | filter:search:strict">
+    <tr ng-repeat="i in users | filter:search:strict" ng-form name="userFrm">
         <td>
             <input type="hidden" ng-model="i.id">
-            <input type="text" class="form-control" ng-model="i.username">
+            <input type="text" class="form-control" ng-model="i.username" required>
         </td>
         <td>
             <select ng-options="item.code as item.name for item in commons.offices"
@@ -71,7 +71,7 @@
                 <option value="">Chọn cơ quan</option>
             </select>
         </td>
-        <td><input type="email" class="form-control" ng-model="i.email"/></td>
+        <td><input type="email" class="form-control" ng-model="i.email" required/></td>
         <td>{{i.created_by}}</td>
         <td>{{i.updated_at | date:'yyyy-MM-dd HH:mm'}}</td>
         <td>
@@ -87,7 +87,7 @@
             </select>
         </td>
         <td><input type="password" placeholder="******" class="form-control" ng-model="i.password"></td>
-        <td><button class="btn btn-success" type="button" ng-click="save(i, $index)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
+        <td><button ng-disabled="userFrm.$invalid" class="btn btn-success" type="button" ng-click="save(i, $index)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
     </tr>
     </tbody>
 </table>

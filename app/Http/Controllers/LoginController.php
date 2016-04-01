@@ -14,9 +14,9 @@ class LoginController extends Controller
 {
     public function Login(LoginRequest $request){
         if(\Auth::attempt($request->all())){
-            return \Auth::user();
+            return response()->json(\Auth::user());
         }else{
-            return 'Invalid username/password';
+            return response()->json(['auth' => ['Invalid username/password']], 401);
         }
     }
 

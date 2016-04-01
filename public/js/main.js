@@ -33,10 +33,9 @@ app.factory('AuthService', function ($http, Session) {
     authService.login = function (credentials) {
         return $http
             .post('login', credentials)
-            .then(function (res) {
-                Session.create(res.data.id,
-                    res.data.role);
-                return res.data;
+            .success(function (res) {
+                Session.create(res.id,
+                    res.role);
             });
     };
 
@@ -73,19 +72,20 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
     $scope.isAuthorized = AuthService.isAuthorized;
     $scope.isAuthenticated = isAuthenticated;
     if ($scope.isAuthenticated) {
-        init();
+        $http.get('home/common').success(function (data) {
+            $scope.commons = data;
+        });
     }
 
     $scope.setCurrentUser = function (user) {
         $scope.currentUser = user;
     };
     $scope.login = function (credentials) {
-        AuthService.login(credentials).then(function (user) {
+        AuthService.login(credentials).success(function (user) {
             $scope.isAuthenticated = AuthService.isAuthenticated();
             $scope.setCurrentUser(user);
-            init();
-        }, function (res) {
-            error(res.data);
+        }).error(function (res) {
+            error(res);
         });
     };
     $scope.logout = function(){
@@ -94,13 +94,11 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
         })
     };
     $scope.doSearch = function(data){
+        reload();
         $scope.search = data;
     };
 
-    function init() {
-        $http.get('home/common').success(function (data) {
-            $scope.commons = data;
-        });
+    function reload() {
         $scope.users = User.query(function () {
             $scope.addEmptyUser();
         });

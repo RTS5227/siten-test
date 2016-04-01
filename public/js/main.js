@@ -106,20 +106,19 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
         });
     }
 
-    $scope.save = function (user) {
+    $scope.save = function (user, index) {
         $scope.currentUser = new User(user);
         if (angular.isDefined(user.id)) {
             $scope.currentUser.$update(function (res) {
                 toastr.info('Lưu thành công!');
+                $scope.users[index] = res;
             }, function (res) {
                 error(res.data);
             });
         } else {
             $scope.currentUser.$save(function (res) {
-                $scope.users = User.query(function () {
-                    $scope.addEmptyUser();
-                });
                 toastr.info('Đăng ký thành công!');
+                $scope.users[index] = res;
             }, function (res) {
                 error(res.data);
             });

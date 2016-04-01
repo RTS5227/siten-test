@@ -28,7 +28,7 @@
 </div>
 <!-- end container -->
 <script type="text/javascript">
-    var isAuthenticated = {{Auth::check()}};
+    var isAuthenticated = {{+Auth::check()}};
 </script>
 <!--  Scripts-->
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>

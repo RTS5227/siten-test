@@ -15,19 +15,24 @@
             <label>Cơ quan</label>
             <select ng-options="item.code as item.name for item in commons.offices track by item.code"
                     ng-model="s.office" class="form-control" tabindex="2">
+                <option value="">Chọn cơ quan</option>
             </select>
         </div>
         <div class="form-group col-sm-6">
             <label>Phân loại sử dụng</label>
             <select ng-options="item.code as item.name for item in commons.types track by item.code"
-                    ng-model="s.type" class="form-control" tabindex="3"></select>
+                    ng-model="s.type" class="form-control" tabindex="3">
+                <option value="">Chọn loại sử dụng</option>
+            </select>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-sm-3">
             <label>Role</label>
             <select ng-options="item.code as item.name for item in commons.roles track by item.code"
-                    ng-model="s.role" class="form-control" tabindex="4"></select>
+                    ng-model="s.role" class="form-control" tabindex="4">
+                <option value="">Chọn role</option>
+            </select>
         </div>
         <div class="form-group col-sm-5">
             <label for="mail">Mail address</label>
@@ -62,21 +67,27 @@
         </td>
         <td>
             <select ng-options="item.code as item.name for item in commons.offices"
-                    ng-model="i.office" class="form-control"></select>
+                    ng-model="i.office" class="form-control">
+                <option value="">Chọn cơ quan</option>
+            </select>
         </td>
         <td><input type="email" class="form-control" ng-model="i.email"/></td>
         <td>{{i.created_by}}</td>
         <td>{{i.updated_at | date:'yyyy-MM-dd HH:mm'}}</td>
         <td>
             <select ng-options="item.code as item.name for item in commons.types"
-                    ng-model="i.type" class="form-control"></select>
+                    ng-model="i.type" class="form-control">
+                <option value="">Chọn loại sử dụng</option>
+            </select>
         </td>
         <td>
             <select ng-options="item.code as item.name for item in commons.roles"
-                    ng-model="i.role" class="form-control"></select>
+                    ng-model="i.role" class="form-control">
+                <option value="">Chọn role</option>
+            </select>
         </td>
-        <td><input type="password" class="form-control" ng-model="i.password"></td>
-        <td><button class="btn btn-success" type="button" ng-click="save(i)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
+        <td><input type="password" placeholder="******" class="form-control" ng-model="i.password"></td>
+        <td><button class="btn btn-success" type="button" ng-click="save(i, $index)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
     </tr>
     </tbody>
 </table>

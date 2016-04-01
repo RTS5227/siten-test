@@ -9,18 +9,19 @@
     <!-- Style -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <link rel="stylesheet" href="css/main.css">
     <title>Siten Test</title>
 </head>
 <body>
 <br>
 
-<div class="container" ng-controller="userCtrl">
+<div class="container" ng-controller="userCtrl" ng-cloak>
     <div class="row">
         <div class="col-sm-12">
             <!--function button-->
             <div class="personnel">
-                <button class="btn btn-primary">Đăng ký</button>
+                <button class="btn btn-primary" ng-click="addEmptyUser()">Đăng ký</button>
                 <button class="btn btn-primary">Logout</button>
             </div>
             <br>
@@ -71,6 +72,7 @@
                     <td>Phân loại sử dụng</td>
                     <td>Role</td>
                     <td>PW</td>
+                    <td>Thao tác</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -95,6 +97,7 @@
                                 ng-model="i.role" class="form-control"></select>
                     </td>
                     <td><input type="password" class="form-control" ng-model="i.password" ng-pattern="/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i"></td>
+                    <td><button class="btn btn-success" type="button" ng-click="save(i)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -112,7 +115,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>
-
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

@@ -55,7 +55,7 @@
                     </div>
                     <div class="form-group col-sm-offset-2 col-sm-2">
                         <label for="">&nbsp;</label>
-                        <button type="button" class="form-control" ng-click="search()">Search</button>
+                        <button type="button" class="form-control btn btn-warning" ng-click="search()">Search</button>
                     </div>
                 </div>
             </form>
@@ -80,19 +80,19 @@
                         <input type="text" class="form-control" ng-model="i.uid" required>
                     </td>
                     <td>
-                        <select ng-options="item.code as item.name for item in commons.offices track by item.code"
+                        <select ng-options="item.code as item.name for item in commons.offices"
                                 ng-model="i.office" class="form-control"></select>
                     </td>
                     <td><input type="email" class="form-control" ng-model="i.email"/></td>
                     <td><input type="text" class="form-control" ng-model="i.created_by"/></td>
                     <td><input type="text" class="form-control" ng-model="i.last_update_at"></td>
                     <td>
-                        <select ng-options="item.code as item.name for item in commons.types track by item.code"
+                        <select ng-options="item.code as item.name for item in commons.types"
                                 ng-model="i.type" class="form-control"></select>
                     </td>
                     <td>
-                        <select ng-options="item.code as item.name for item in commons.roles track by item.code"
-                                ng-model="search.role" class="form-control"></select>
+                        <select ng-options="item.code as item.name for item in commons.roles"
+                                ng-model="i.role" class="form-control"></select>
                     </td>
                     <td><input type="password" class="form-control" ng-model="i.password" ng-pattern="/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i"></td>
                 </tr>

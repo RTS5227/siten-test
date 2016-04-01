@@ -54,5 +54,15 @@ class DatabaseSeeder extends Seeder
             $t[] = ['name' => $k, 'value' => json_encode($v)];
         }
         DB::table('commons')->insert($t);
+
+
+        DB::table('users')->delete();
+        $user = [
+            'uid' => '0001',
+            'email' => 'god@admin.com',
+            'password' => '123456',
+            'role' => 'ADMIN'
+        ];
+        DB::table('users')->insert($user);
     }
 }

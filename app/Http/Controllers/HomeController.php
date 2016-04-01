@@ -9,23 +9,23 @@ use Illuminate\Routing\Controller as BaseController;
 
 class HomeController extends BaseController
 {
-    /**
-     * Responds to requests to GET /home/allUser
-     */
-    public function getAllUser()
+    public function __construct()
     {
-        return response()->json(User::all());
+        //$this->middleware('auth');
     }
 
     /**
-     * Responds to requests to GET /home/User/:id
+     * Responds to requests to GET /home/User/[:id]
      *
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUser($id){
-        $user = User::findOrFail($id);
-        return response()->json($user->toArray());
+    public function getUser($id = 0)
+    {
+        if($id > 0 && $user = User::find($id)){
+            return response()->json($user->toArray());
+        }
+        return response()->json(User::all());
     }
 
 
@@ -35,9 +35,13 @@ class HomeController extends BaseController
      * @param UserRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postUser(UserRequest $request){
+    public function postUser(UserRequest $request)
+    {
         $user = User::create($request->all());
-        return response()->json($user->toArray());
+        if (\Auth::user()->role == 'ADMIN') {
+            return response()->json($user->toArray());
+        }
+        return response()->json(false);
     }
 
 
@@ -48,20 +52,25 @@ class HomeController extends BaseController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function putUser(UserRequest $request, $id){
+    public function putUser(UserRequest $request, $id)
+    {
         $user = User::findOrFail($id);
-        $user->update($request->all());
-        return response()->json($user->toArray());
+        if (\Auth::user()->role == 'ADMIN' || \Auth::user()->uid == $user->uid) {
+            $user->update($request->all());
+            return response()->json($user->toArray());
+        }
+        return response()->json(false);
     }
 
     /**
      * Responds to requests to GET /home/common
      */
-    public function getCommon(){
+    public function getCommon()
+    {
         $commons = [];
-        $t= Common::all();
+        $t = Common::all();
         /** @var Common $common */
-        foreach($t as $common){
+        foreach ($t as $common) {
             $commons[$common->name] = json_decode($common->value);
         }
         return response()->json($commons);

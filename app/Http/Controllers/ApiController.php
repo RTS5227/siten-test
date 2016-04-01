@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Common;
-use App\Http\Requests\Request;
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\UserRequest;
 use App\User;
@@ -77,11 +76,11 @@ class ApiController extends BaseController
         } else {
             unset($data['password']);
         }
-        $user = User::create($data);
-        if (\Auth::user()->role == 'ADMIN') {
+        if (\Auth::user()->role === 'ADMIN') {
+            $user = User::create($data);
             return response()->json($user->toArray());
         }
-        return response()->json(false);
+        return response()->json(['role' => ['Access Denied']], 403);
     }
 
 
@@ -105,7 +104,7 @@ class ApiController extends BaseController
             return response()->json($user->toArray());
         } else {
         }
-        return response()->json(false);
+        return response()->json(['role' => ['Access Denied']], 403);
     }
 
     /**

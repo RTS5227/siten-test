@@ -21,17 +21,14 @@
 <div class="container" ng-controller="userCtrl" ng-cloak>
     <div class="row">
         <div class="col-sm-12">
-            <div ng-if="isAuthenticated" ng-include="'user.html'"></div>
-            <div ng-if="!isAuthenticated" ng-include="'login.html'"></div>
+            <div ng-if="isAuthenticated()" ng-include="'user.html'"></div>
+            <div ng-if="!isAuthenticated()" ng-include="'login.html'"></div>
         </div>
         <!-- end col s12 -->
     </div>
     <!-- end row -->
 </div>
 <!-- end container -->
-<script type="text/javascript">
-    var isAuthenticated = {{+Auth::check()}};
-</script>
 <!--  Scripts-->
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-resource.js"></script>

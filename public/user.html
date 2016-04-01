@@ -1,6 +1,6 @@
 <!--function button-->
 <div class="personnel">
-    <button class="btn btn-primary" ng-click="addEmptyUser()">Đăng ký</button>
+    <button class="btn btn-primary" ng-show="isAuthorized(userRoles.admin)" ng-click="addEmptyUser()">Đăng ký</button>
     <button class="btn btn-primary" ng-click="logout()">Logout</button>
 </div>
 <br>
@@ -87,7 +87,7 @@
             </select>
         </td>
         <td><input type="password" placeholder="******" class="form-control" ng-model="i.password"></td>
-        <td><button ng-disabled="userFrm.$invalid" class="btn btn-success" type="button" ng-click="save(i, $index)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
+        <td><button ng-show="isAuthorized(userRoles.admin) || i.username==currentUser.username" ng-disabled="userFrm.$invalid" class="btn btn-success" type="button" ng-click="save(i, $index)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
     </tr>
     </tbody>
 </table>

@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
                     'name' => 'Admin'
                 ],
                 [
-                    'code' => 'GENERAL',
+                    'code' => 'USER',
                     'name' => 'Chung'
                 ],
             ],

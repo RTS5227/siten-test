@@ -13,6 +13,7 @@ class CreateCommonTable extends Migration
     public function up()
     {
         Schema::create('commons', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('name')->index();
             $table->string('value')->index();
             $table->timestamp('created_at');

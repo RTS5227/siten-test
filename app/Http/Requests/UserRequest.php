@@ -37,7 +37,7 @@ class UserRequest extends Request
         }
         return [
             'username' => 'required|unique:users',
-            'password' => 'required|min:6',
+            'password' => ['required', 'min:6', 'regex:/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i'],
             'email' => 'required|email|unique:users'
         ];
     }

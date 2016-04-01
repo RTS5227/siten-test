@@ -1,7 +1,7 @@
 <!--function button-->
 <div class="personnel">
     <button class="btn btn-primary" ng-click="addEmptyUser()">Đăng ký</button>
-    <button class="btn btn-primary">Logout</button>
+    <button class="btn btn-primary" ng-click="logout()">Logout</button>
 </div>
 <br>
 <!-- search box -->
@@ -9,33 +9,33 @@
     <div class="row">
         <div class="form-group col-sm-3">
             <label for="id">ID</label>
-            <input id="id" type="text" class="form-control">
+            <input id="id" type="text" class="form-control" tabindex="1" ng-model="s.username">
         </div>
         <div class="form-group col-sm-3">
-            <label for="office">Cơ quan</label>
+            <label>Cơ quan</label>
             <select ng-options="item.code as item.name for item in commons.offices track by item.code"
-                    ng-model="search.office" class="form-control">
+                    ng-model="s.office" class="form-control" tabindex="2">
             </select>
         </div>
         <div class="form-group col-sm-6">
-            <label for="office">Phân loại sử dụng</label>
+            <label>Phân loại sử dụng</label>
             <select ng-options="item.code as item.name for item in commons.types track by item.code"
-                    ng-model="search.type" class="form-control"></select>
+                    ng-model="s.type" class="form-control" tabindex="3"></select>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-sm-3">
-            <label for="office">Role</label>
+            <label>Role</label>
             <select ng-options="item.code as item.name for item in commons.roles track by item.code"
-                    ng-model="search.role" class="form-control"></select>
+                    ng-model="s.role" class="form-control" tabindex="4"></select>
         </div>
         <div class="form-group col-sm-5">
             <label for="mail">Mail address</label>
-            <input id="mail" type="email" class="form-control" ng-model="search.email"/>
+            <input id="mail" type="email" class="form-control" ng-model="s.email" tabindex="5"/>
         </div>
         <div class="form-group col-sm-offset-2 col-sm-2">
-            <label for="">&nbsp;</label>
-            <button type="button" class="form-control btn btn-warning" ng-click="search()">Search</button>
+            <label>&nbsp;</label>
+            <button type="button" class="form-control btn btn-warning" ng-click="doSearch(s)" tabindex="6">Search</button>
         </div>
     </div>
 </form>
@@ -55,10 +55,10 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="i in users">
+    <tr ng-repeat="i in users | filter:search:strict">
         <td>
             <input type="hidden" ng-model="i.id">
-            <input type="text" class="form-control" ng-model="i.username" required>
+            <input type="text" class="form-control" ng-model="i.username">
         </td>
         <td>
             <select ng-options="item.code as item.name for item in commons.offices"
@@ -75,7 +75,7 @@
             <select ng-options="item.code as item.name for item in commons.roles"
                     ng-model="i.role" class="form-control"></select>
         </td>
-        <td><input type="password" class="form-control" ng-model="i.password" ng-pattern="/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i"></td>
+        <td><input type="password" class="form-control" ng-model="i.password"></td>
         <td><button class="btn btn-success" type="button" ng-click="save(i)">{{i.id ? 'Lưu' : 'Đăng ký'}}</button></td>
     </tr>
     </tbody>

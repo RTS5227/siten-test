@@ -88,6 +88,14 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
             error(res.data);
         });
     };
+    $scope.logout = function(){
+        AuthService.logout().then(function(){
+            $scope.isAuthenticated = AuthService.isAuthenticated();
+        })
+    };
+    $scope.doSearch = function(data){
+        $scope.search = data;
+    };
 
     function init() {
         $http.get('home/common').success(function (data) {
@@ -108,6 +116,9 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
             });
         } else {
             $scope.currentUser.$save(function (res) {
+                $scope.users = User.query(function () {
+                    $scope.addEmptyUser();
+                });
                 toastr.info('Đăng ký thành công!');
             }, function (res) {
                 error(res.data);

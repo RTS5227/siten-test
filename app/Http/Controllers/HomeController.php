@@ -39,6 +39,7 @@ class HomeController extends BaseController
     public function postUser(UserRequest $request)
     {
         $data = $request->all();
+        $data['created_by'] = \Auth::user()->username;
         if ($request->password) {
             $data['password'] = bcrypt($data['password']);
         } else {
@@ -70,6 +71,7 @@ class HomeController extends BaseController
             }
             $user->update($data);
             return response()->json($user->toArray());
+        }else{
         }
         return response()->json(false);
     }

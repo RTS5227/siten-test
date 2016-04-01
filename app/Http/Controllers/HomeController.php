@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Common;
+use App\Http\Requests\Request;
 use App\Http\Requests\UserRequest;
 use App\User;
 use Illuminate\Routing\Controller as BaseController;
@@ -49,13 +50,12 @@ class HomeController extends BaseController
      * Responds to requests to PUT /home/User/:id
      *
      * @param UserRequest $request
-     * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function putUser(UserRequest $request, $id)
+    public function putUser(UserRequest $request)
     {
-        $user = User::findOrFail($id);
-        if (\Auth::user()->role == 'ADMIN' || \Auth::user()->uid == $user->uid) {
+        $user = User::findOrFail($request->id);
+        if (true) {
             $user->update($request->all());
             return response()->json($user->toArray());
         }

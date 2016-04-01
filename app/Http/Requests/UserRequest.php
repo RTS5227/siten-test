@@ -28,6 +28,14 @@ class UserRequest extends Request
      */
     public function rules()
     {
+        if (request()->isMethod('put')) {
+            return [
+                'id' => 'required',
+                'uid' => 'required',
+                'password' => 'required|min:6',
+                'email' => 'required|email'
+            ];
+        }
         return [
             'uid' => 'required|unique:users',
             'password' => 'required|min:6',

@@ -18,15 +18,18 @@ app.controller('userCtrl', function ($scope, $http, User) {
     });
 
     $scope.save = function (user) {
-        if (!angular.isDefined(user.uid)) return;
         $scope.currentUser = new User(user);
         if (angular.isDefined(user.id)) {
             $scope.currentUser.$update(function(res){
                 toastr.info('Lưu thành công!');
+            }, function(res){
+                error(res.data);
             });
         } else {
             $scope.currentUser.$save(function(res){
                 toastr.info('Đăng ký thành công!');
+            }, function(res){
+                error(res.data);
             });
         }
     };
@@ -36,6 +39,17 @@ app.controller('userCtrl', function ($scope, $http, User) {
         newUser.uid = leftPadding(String(1 + getMaxUid()), 4);
         $scope.users.push(newUser);
     };
+
+    function error(data){
+        for (var key in data) {
+            // skip loop if the property is from prototype
+            if (!data.hasOwnProperty(key)) continue;
+            var list = data[key];
+            for (var item in list) {
+                return toastr.error(list[item]);
+            }
+        }
+    }
 
     function getMaxUid() {
         var max = 0;

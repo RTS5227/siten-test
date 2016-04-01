@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
+/**
+ * Class ExampleTest
+ */
 class ExampleTest extends TestCase
 {
     /**

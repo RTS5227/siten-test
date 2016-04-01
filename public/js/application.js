@@ -59,6 +59,7 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
             $scope.currentUser.$save(function (res) {
                 toastr.info('Đăng ký thành công!');
                 $scope.users[index] = res;
+                $scope.addEmptyUser();
             }, function (res) {
                 error(res.data);
             });
@@ -66,7 +67,7 @@ app.controller('userCtrl', function ($scope, $http, User, AuthService, USER_ROLE
     };
 
     $scope.addEmptyUser = function () {
-        if (!AuthService.isAuthorized('ADMIN'))return;
+        if (!AuthService.isAuthorized(USER_ROLES.admin))return;
         last_insert_id++;
         var newUser = new User();
         newUser.username = leftPadding(String(last_insert_id), 4);
